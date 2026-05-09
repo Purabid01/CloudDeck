@@ -1,0 +1,29 @@
+BaseSettings = a special Pydantic class that knows how to read from environment variables
+SettingsConfigDict = configure HOW BaseSettings behave
+list from typing --> because our ALLOWED_ORIGINS will be a list of strings
+
+
+
+class Settings(BaseSettings) = we are creating our own settings class that inherits all of 'BaseSettings' superpower
+model_config = tells 'Pydantic' read from a .env file, the file is UTF-8 encoded, and dont care about uppercase and lowercase variable names
+env_file=".env" - the .env file, we just created is where local values come from
+
+
+
+app_name: str = the variables must be string type
+= "CloudDeck" = this is the default value if app name is not in your environment
+debug: bool = True = Pydantic automatically converts the string "True" from .env into an actual Python True boolean
+
+
+
+secret_key: str has NO default value. That's intentional. If SECRET_KEY is missing from the environment, Pydantic throws an error immediately when the app starts — before any user can even connect. This is the fail fast principle. Better to crash at startup than to silently run without a secret key.
+
+
+
+allowed_origins: list[str]. This is a list of URLs that are allowed to call your API from a browser. Right now just your local frontend. In production this would be your actual domain. Pydantic reads it from .env as a comma-separated string and converts it to a Python list automatically.
+
+
+
+settings = Settings()  --> This creates ONE Settings object when the app starts. Every other file imports this single object
+
+
